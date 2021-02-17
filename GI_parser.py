@@ -22,7 +22,7 @@ class FrameBase:
         for line in lines:
             if "### Frame" in line.strip():
                 row_ct = 0
-                frametime = line.split("at ")[1]
+                frametime = int(line.split("at ")[1][:-1])
                 if frame.size != 0:
                     frame_obj = Frame(frametime, frame)
                     self.frameList.append(frame_obj)
@@ -36,4 +36,5 @@ class FrameBase:
                 frame = np.vstack([frame, row])
                 row_ct += 1
 
-
+    def __getitem__(self, key):
+        return self.frameList[key]
