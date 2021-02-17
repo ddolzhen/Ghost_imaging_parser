@@ -60,9 +60,44 @@ struct data_entry parseLine(char* line)
 
 
 
-int main()
+int main(int argc, char *argv[])
 {
-	FILE* stream = fopen(FILENAME,"r");
+
+	char* filename="";
+	bool filename_found=false;
+
+	if (argc<2)
+	{
+		std::cout << "ERROR: No command line arguments\n";
+		return 0;
+	}
+	if (argv[1][0]!='-')
+	{
+		filename=argv[1];
+		filename_found=true;
+	}else if (argv[1][0]== '-')
+	{
+		char command=argv[1][1];
+		if (command=='f' || command == 'F')
+		{
+			if (argc>=3)
+			{
+				filename=argv[2];
+				filename_found=true;
+			}else{
+
+				std::cout<<"-f must be used with a file name after\n";
+				return 0xBADBEEF;
+			}
+		}
+	}
+	FILE* stream;
+	if (!filename_found)
+	{
+		stream = fopen(FILENAME,"r");
+	}else{
+		stream = fopen(filename,"r");
+	}
 	std::ofstream stream_out("output.txt");
 
 	std::queue<struct data_entry> data_buffer;
