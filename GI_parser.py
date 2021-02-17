@@ -4,6 +4,7 @@ import numpy as np
 class Frame:
     def __init__(self, frametime, frame_matrix):
         self.time = frametime
+        self.time_ns = frametime / 4096 * 25
         self.data = frame_matrix
 
 
