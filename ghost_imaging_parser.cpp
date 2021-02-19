@@ -17,7 +17,7 @@ struct data_entry{
 	int col;
 	int row;
 	int tot;
-	long toa;
+	long long toa;
 };
 
 struct data_entry parseLine(char* line)
@@ -36,7 +36,7 @@ struct data_entry parseLine(char* line)
 		}else if (entry_ct==1){
 			entry.row=atoi(token);
 		}else if (entry_ct==2){
-			entry.toa=strtol(token,&ptr,10);
+			entry.toa=std::stoll(token,NULL,10);
 		}else if (entry_ct==3){
 			entry.tot=atoi(token);
 		}
@@ -111,16 +111,16 @@ int main(int argc, char *argv[])
 	struct data_entry entry;
 	int* col=new int;
 	int* row=new int;
-	long* toa=new long;
+	long long* toa=new long long;
 	int* tot=new int;
 
-	long toa_prev;
+	long long toa_prev;
 	int toa_count;
 	fgets(line,60,stream); // This is done to skip the header line
 
 	long line_ct=0;
-	long toa_curr=0;
-	long toa_trig=0;
+	long long toa_curr=0;
+	long long toa_trig=0;
 	int hits_per_toa=0;
 	char saving=0;
 
@@ -156,6 +156,7 @@ int main(int argc, char *argv[])
 				frame_ct++;
 				toa_trig=toa_curr;
 				std::cout<< "FOUND PEAK AT "<< ((float)(toa_curr))/4096*25<<" ns \n";
+				
 				while(!data_buffer.empty()) // Store the buffer into the matrix
 				{
 					entry=data_buffer.front();
@@ -165,17 +166,17 @@ int main(int argc, char *argv[])
 					}
 					data_buffer.pop();
 				}
-
+				
 
 				fgets(line,60,stream);
 				char* line_tmp=strdup(line);//Use this line
 				entry=parseLine(line_tmp);//Make an entry
 				delete line_tmp;//Clear memory
-
+				
+				
 				while ( float(entry.toa-toa_trig) / 4096*25.0 <TIME_AFTER_PEAK) //Write Down After Peak Hits
 				{
 					frame[entry.col][entry.row] += entry.tot;
-
 					if (!fgets(line,60,stream))
 					{
 						std::cout<<"File ended during writing";
@@ -187,6 +188,7 @@ int main(int argc, char *argv[])
 					delete line_tmp;//Clear memory
 
 				}
+
 
 				while (float(entry.toa-toa_trig) /4096*25 < COOLDOWN_TIME) //CD
 				{
