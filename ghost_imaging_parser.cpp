@@ -3,6 +3,7 @@
 #include <string.h>
 #include <queue>
 #include <fstream>
+#include <string>
 
 #define FILENAME "B4_wire_1_W0028_F03-210211-095109-1.csv"
 #define PEAK_SIZE 200
@@ -66,6 +67,8 @@ int main(int argc, char *argv[])
 	char* filename="";
 	bool filename_found=false;
 
+
+
 	if (argc<2)
 	{
 		std::cout << "No command line arguments, using default parameters\n";
@@ -93,13 +96,31 @@ int main(int argc, char *argv[])
 		}
 	}
 	FILE* stream;
+	std::string out_file ("frames_");
 	if (!filename_found)
 	{
 		stream = fopen(FILENAME,"r");
+
+		for (int i=0;i<15;i++)
+		{
+			out_file+=FILENAME[i];
+		}
+
 	}else{
 		stream = fopen(filename,"r");
+		for (int i=0;i<15;i++)
+		{
+			out_file+=filename[i];
+		}
+
 	}
-	std::ofstream stream_out("output.txt");
+
+	out_file+=".txt";
+
+
+
+	std::cout << "Writing to "<<out_file <<"\n"; 
+	std::ofstream stream_out(out_file);
 
 	std::queue<struct data_entry> data_buffer;
 	char line[60];
@@ -156,7 +177,7 @@ int main(int argc, char *argv[])
 				frame_ct++;
 				toa_trig=toa_curr;
 				std::cout<< "FOUND PEAK AT "<< ((float)(toa_curr))/4096*25<<" ns \n";
-				
+
 				while(!data_buffer.empty()) // Store the buffer into the matrix
 				{
 					entry=data_buffer.front();
@@ -166,14 +187,14 @@ int main(int argc, char *argv[])
 					}
 					data_buffer.pop();
 				}
-				
+
 
 				fgets(line,60,stream);
 				char* line_tmp=strdup(line);//Use this line
 				entry=parseLine(line_tmp);//Make an entry
 				delete line_tmp;//Clear memory
-				
-				
+
+
 				while ( float(entry.toa-toa_trig) / 4096*25.0 <TIME_AFTER_PEAK) //Write Down After Peak Hits
 				{
 					frame[entry.col][entry.row] += entry.tot;
