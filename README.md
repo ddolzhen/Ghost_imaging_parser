@@ -3,9 +3,14 @@ c++ app for parsing pulsed TimePix 3 csv data into TOT matrices
 
 
 compile with:
-g++ ghost_imaging_parser.cpp -o ghost_imaging_parser.out
+g++ ghost_imaging_parser.cpp -o gip.out
+
+use with:
+./gip.out -f filename.csv
+
+This should produce frames_filename.txt
 
 
-GI_parser.py provides useful classes for loading parsed frames into python
+Use GI_parser.py library to load the frames_filename.txt file into python
 
-GIP_test.ipynb is a jupyter-notebook with examples on how GI_parser can be used
+Example shown in GIP_test.ipynb
