@@ -6,7 +6,7 @@
 #include <string>
 
 #define FILENAME "B4_wire_1_W0028_F03-210211-095109-1.csv"
-#define PEAK_SIZE 200
+#define PEAK_SIZE 80
 #define TIME_BEFORE_PEAK 200
 #define TIME_AFTER_PEAK 3e3 // This includes afterpulsing (happens 1.5-2.5 us after main peak)
 #define BUFFER_SIZE 10000
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 		if (data_buffer.size()>BUFFER_SIZE){ data_buffer.pop(); }
 
 
-		if (hits_per_toa>200 && !saving)
+		if (hits_per_toa>PEAK_SIZE && !saving)
 		{
 				saving=1;
 				frame_ct++;
